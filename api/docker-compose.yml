@@ -1,0 +1,51 @@
+version: "3"
+
+services:
+  intranet_postgres:
+    networks:
+      - intranet
+    restart: on-failure
+    image: postgres:12.1-alpine
+    container_name: "intranet_postgres"
+    environment:
+      - POSTGRES_DB=Intranet
+      - POSTGRES_USER:postgres
+      # - POSTGRES_PASSWORD:docker
+    volumes:
+      - "./src/database/postgres:/var/lib/postgresql"
+    ports:
+      - 5432:5432
+
+  intranet_nginx:
+    container_name: intranet_nginx
+    build: ./nginx
+    ports:
+      - 80:80
+      - 433:433
+    networks:
+      - intranet
+    restart: on-failure
+    volumes:
+      - ./src/nginx/sites-enabled:/etc/nginx/sites-enabled
+      - ./src/nginx/conf.d:/etc/nginx/conf.d
+      - ../react/build:/var/www/build
+
+  intranet_node:
+    build: .
+    networks:
+      - intranet
+    links:
+      - intranet_postgres
+    depends_on:
+      - intranet_postgres
+    image: node:12.14.1-alpine3.11
+    container_name: "intranet_node"
+    volumes:
+      - .:/usr/app
+    ports:
+      - 3333:3333
+    command: "sh /usr/app/start.sh"
+
+networks:
+  intranet:
+

@@ -1,0 +1,7 @@
+FROM postgres:12.1-alpine
+
+ENV POSTGRES_PASSWORD docker
+ENV POSTGRES_USER postgres
+ENV POSTGRES_DB Intranet
+
+EXPOSE 5432:5432
