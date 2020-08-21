@@ -7,7 +7,7 @@ module.exports = {
       [
         {
           username: 'admin',
-          email: 'admin@blupay.com.br',
+          email: 'admin@intranet.com.br',
           password_hash: bcrypt.hashSync('123456', 8),
           created_at: new Date(),
           updated_at: new Date(),
